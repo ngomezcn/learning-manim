@@ -17,7 +17,7 @@ class InteractiveDevelopment(Scene):
         # lines as if they were part of this construct method.
         # In particular, 'square', 'circle' and 'self' will all be
         # part of the local namespace in that terminal.
-        #self.embed()
+        self.embed()
 
         # Try copying and pasting some of the lines below into
         # the interactive shell
