@@ -1,8 +1,5 @@
 from manimlib import *
 
-import pandas
-import matplotlib
-
 class AnimatingMethods(Scene):
     def construct(self):
         grid = Tex(r"\pi").get_grid(10, 10, height=4)
@@ -33,11 +30,13 @@ class AnimatingMethods(Scene):
         # The method Mobject.apply_complex_function lets you apply arbitrary
         # complex functions, treating the points defining the mobject as
         # complex numbers.
-        self.play(grid.animate.apply_complex_function(np.exp), run_time=5)
+        self.play(grid.animate.apply_complex_function(np.exp), run_time=1)
         self.wait()
 
         # Even more generally, you could apply Mobject.apply_function,
         # which takes in functions form R^3 to R^3
+        
+        play_kw = {"run_time": 5}
         self.play(
             grid.animate.apply_function(
                 lambda p: [
@@ -45,7 +44,6 @@ class AnimatingMethods(Scene):
                     p[1] + 0.5 * math.sin(p[0]),
                     p[2]
                 ]
-            ),
-            run_time=5,
+            ),**play_kw 
         )
         self.wait()
