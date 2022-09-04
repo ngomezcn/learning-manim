@@ -7,18 +7,18 @@ from Fisica import AUMENTO_APLICADO
 import matplotlib.pyplot as plt
 from matplotlib.collections import EventCollection
 import numpy as np
-
+from Agent import *
 pygame.init()
 
 def to_pygame(coords, height, obj_height):
     """Convert an object's coords into pygame coordinates (lower-left of object => top left in pygame coords)."""
     return (coords[0], height - coords[1] - obj_height)
 
-size = width, height = 300, 800
+size = width, height = 400, 800
 screen = pygame.display.set_mode(size)
 
 # Entidad fisica
-entidad = Entidad(x=130*AUMENTO_APLICADO, y=3*AUMENTO_APLICADO, velocidad=0, masa=1, coeficiente_restitución=0.9, en_caida=True)
+entidad = Entidad(x=130*AUMENTO_APLICADO, y=5*AUMENTO_APLICADO, velocidad=0, masa=1, coeficiente_restitución=0.85, en_caida=True)
 posicion_inicial = entidad.pos.y
 velocidad_inicial = entidad.velocidad
 
@@ -57,31 +57,34 @@ while 1:
             posicion_inicial = 0
             velocidad_inicial = v1
             
-            #print( "t", t, "ep", round(ep, 2), "ec", round(ec, 2), "em", round(em, 2), "u1", round(u1, 2), "v1", round(v1, 2), "velocidad:", round(entidad.velocidad, 2))
+            print( "t", t, "ep", round(ep, 2), "ec", round(ec, 2), "em", round(em, 2), "u1", round(u1, 2), "v1", round(v1, 2), "velocidad:", round(entidad.velocidad, 2))
             START_TIME = time.time()
             entidad.max_pos_y = 0
             
-            if(v1 > 3 and sonido):
-                crash_sound = pygame.mixer.Sound("D:\GitRepos\learning-manim\Physics\clack.wav")
-                crash_sound.set_volume(100*(v1/100000))
-                #pygame.mixer.Sound.play(crash_sound)
+            
+            if(v1 > 1.5 and sonido):
+                crash_sound = pygame.mixer.Sound("D:\GitRepos\python_visualization\Physics\clack.wav")
+                crash_sound.set_volume(200*(v1/100000))
+                pygame.mixer.Sound.play(crash_sound)
             else:
                 sonido = False
-                
-            if(v1 < 1.5 or u1 < 1):
+            
+            if(v1 < 0.5 or u1 < 0.5):
                 entidad.en_caida = False
+                sonido = False
                 
                 fig, ax = plt.subplots()
                 ax.plot(tiempo_arr, altura_arr)
+                title = r"$\frac{ m }{ s^2 }$"
 
-                ax.set(xlabel='time (s)', ylabel='voltage (mV)', title='About as simple as it gets, folks')
+                ax.set(xlabel='time (s)', ylabel='height (m)', title= r"${e}$: " + str(entidad.coeficiente_restitución) + r"  |  ${a}$: " + str(GRAVEDAD_TIERRA_NEGATIVO/AUMENTO_APLICADO) + r" $\frac{ m }{ s^2 }$" + r"  |  ${m}$: " + str(entidad.masa) + r"$\ kg $" )
                 ax.grid()
 
                 fig.savefig("test.png")
                 plt.show()
-        
+            
     screen.fill((0, 0, 0))
-    pygame.draw.rect(screen, (0,255,0), pygame.Rect(0, 799, 300, 1))
+    #pygame.draw.rect(screen, (0,255,0), pygame.Rect(0, 799, 300, 1))
     pygame.draw.circle(screen, (255,0,0), to_pygame((200,entidad.pos.y), 800, 50), 50)
     pygame.display.flip()
     
